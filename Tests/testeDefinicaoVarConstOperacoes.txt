@@ -1,0 +1,15 @@
+integer x; 
+double y;
+float f; 
+char letra;
+string palavra;
+
+f = x*y;
+f = x+y;
+f = x-y;
+f = x/y;
+
+flag = true;
+
+CONSTANTETRUE = flag;
+CONSTANTEFALSA = !flag;

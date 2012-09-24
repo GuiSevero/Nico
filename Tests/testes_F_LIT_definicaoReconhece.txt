@@ -1,0 +1,7 @@
+pi = 3.14
+piComExp = 3.14e+0
+zeroDotZero = 0.0
+zeroDotZeroExp = 0.0E+0
+dotZeroExp = .0E0
+zeroDotNothing = 0.
+intNormal = 09990

@@ -1,0 +1,3 @@
+umE10 = 1e10;
+eMaisDez = e+10;
+dezDot1E = 10.1E;

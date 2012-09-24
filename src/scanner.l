@@ -1,4 +1,5 @@
  /* Secao das declaracoes */
+ /* Comeca a etapa 2 */
 
 %option noyywrap
   /* Sera copiado no .c final */

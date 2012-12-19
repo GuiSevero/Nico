@@ -1,0 +1,9 @@
+real: y;
+double: z;
+integer: x ;
+if(x == 1) then 
+	x=1 + 1; 
+	x=1 * 1;
+	y=1 / 1;
+	x=1 - 1;
+end

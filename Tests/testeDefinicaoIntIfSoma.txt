@@ -1,7 +1,0 @@
-integer x = 10;
-
-if(x==10){
-	printf("sou 10");
-}
-
-x = x+10;

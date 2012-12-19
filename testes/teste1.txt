@@ -1,0 +1,12 @@
+real: y;
+double: z;
+integer: x ;
+y = 10;
+x = 3+y;
+x= y * x + 1;
+print (x);
+print (y);
+print (1+2);
+i
+y = y * y * 3 * (3 + z);
+

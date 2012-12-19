@@ -1,5 +1,12 @@
- /* Secao das declaracoes */
- /* Comeca a etapa 2 */
+/* Secao das declaracoes */
+
+%option yylineno
+%{
+
+  #define YY_USER_ACTION yylloc.first_line = yylineno;
+  #define YY_USER_INIT yylineno = 1;
+
+%}
 
 %option noyywrap
   /* Sera copiado no .c final */
@@ -33,7 +40,7 @@ aspasDupla \"
   */
 integer { return(INT); } 
 double { return(DOUBLE); }
-float { return(FLOAT); }
+real { return(REAL); }
 char { return(CHAR); }
 string { return(STRING); }
 "*"    { return('*');}
@@ -61,46 +68,53 @@ string { return(STRING); }
 "&&" { return(AND); }
 "||" { return(OR); }
 "!" {return(NOT); }
+"print" { return(PRINTF); }
 if { return(IF); }
 then { return(THEN); }
 else { return(ELSE); }
-for { return(FOR); }
-next { return(NEXT); }
 while { return(WHILE); }
 end { return(END); }
 true { return(TRUE); }
 false {return(FALSE); }
 
 
-({espaco}|{tab}|{novaLinha})+ { printf("SPACE\n"); }
+({espaco}|{tab}|{novaLinha})+ { 
+  /*printf("SPACE\n");*/ 
+  if(yytext[0] == "\n")
+    yylineno++;
+}
 
 ({letraMinuscula}|{underline})+({letraMinuscula}|{letraMaiscula}|{underline}|{digito})* { 
-  printf("%s", yytext); 
+  /*printf("%s", yytext);*/
+  yylval.cadeia = strdup(yytext);
   return(IDF);
 }
 
 {letraMaiscula}+({underline}|{letraMaiscula}|{digito})* {
-  printf("%s", yytext);
+  /*printf("%s", yytext);*/
+  yylval.cadeia = strdup(yytext);
   return(CONST);
 }
 
 {aspasDupla}({letraMinuscula}|{letraMaiscula}|{digito}|{espaco})*{aspasDupla} {
-  printf("%s", yytext);
+  /*printf("%s", yytext);*/
+  yylval.cadeia = strdup(yytext);
   return(STR_LIT);
 }
 
 
 {digito}*"."{digito}*(([e]|[E])("+"|"-")?{digito}+)? {
   VAL_DOUBLE = atof(yytext);
+  yylval.cadeia = strdup(yytext);
   return(F_LIT);
 }
 
 {digito}+ {
   VAL_INT = atoi(yytext);
+  yylval.cadeia=(char*)malloc((strlen(yytext)+1)*sizeof(char));
+  strcpy(yylval.cadeia, yytext); 
   return(INT_LIT);
 }
-
-
 
 
   /* Tratamento dos erros lexicais: a regra seguinte pega tudo o que nao
@@ -109,9 +123,11 @@ false {return(FALSE); }
 . { printf("Erro léxico: caractere desconhecido '%c' (%d).\n",
         yytext[0], yytext[0]); exit(70); }
 %%
- /* Secao dos  Procedimentos auxiliares  */
+ 
 
- /* Para redefinir a entrada padrao do LEX. 
+/* Secao dos  Procedimentos auxiliares  */
+
+ /** Para redefinir a entrada padrao do LEX. 
   * Redefinir a variavel 'yyin' para ler de um arquivo. Por exemplo:
      yyin = fopen("Meu_programa.c", "r");
   * ira mandar ler o programa a ser compilado pelo analisador lexical
@@ -120,28 +136,3 @@ false {return(FALSE); }
   */
 
 extern FILE *yyin;
-int main(int argc, char* argv[]) {
-   int token;
-   if (argc != 2) {
-     printf("uso: %s <input_file>. Try again!\n", argv[0]);
-     exit(50);
-   }
-   yyin = fopen(argv[1], "r");
-   if (!yyin) {
-     printf("Uso: %s <input_file>. Could not find %s. Try again!\n", 
-         argv[0], argv[1]);
-     exit(55);
-   }
-  /* agora a entrada padrao eh o arquivo especificado como 1o argumento ao
-   * executavel (argv[1]).
-   * Soh chama o analisador lexical default fornecido pelo output do Flex:
-   */
-  while (token=yylex()) { 
-     /* neste laco, obtem-se "palavra por palavra" os tokens reconhecidos
-      * pelo scanner fornecido pelo Lex. Poderia ser feita a analise
-      * sintatica... Sera feito depois!
-      */
-     printf("Meu analisador lexical reconheceu o token %d\n", token);
-  }
-  return(0);
-}

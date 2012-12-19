@@ -1,5 +1,0 @@
-"testeString";
-["string1"], ["123123"], ["letras"], [semAspas];
-x <-> y;
-x : y;
-_var = 'char';
